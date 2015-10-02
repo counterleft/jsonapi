@@ -4,3 +4,6 @@ machine:
 test:
   override:
     - mvn clean test jacoco:report coveralls:report
+general:
+  artifacts:
+    - "target"
