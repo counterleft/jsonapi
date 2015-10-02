@@ -85,7 +85,7 @@ public class JsonApiSerializerTest {
   }
 
   @JsonApiResource(name = "people")
-  private class Person {
+  private static class Person {
     @JsonApiId
     public final Long id;
 
@@ -98,7 +98,7 @@ public class JsonApiSerializerTest {
   }
 
   @JsonApiResource(name = "missing-id-resources")
-  private class MissingIdResource {
+  private static class MissingIdResource {
     public final String text;
 
     private MissingIdResource(String text) {
