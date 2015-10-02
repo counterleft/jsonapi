@@ -3,7 +3,7 @@ machine:
     version: oraclejdk8
 test:
   override:
-    - mvn clean test jacoco:report coveralls:report
+    - mvn clean package jacoco:report coveralls:report
 general:
   artifacts:
-    - "target"
+    - "target/*.jar"
