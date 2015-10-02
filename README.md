@@ -1,5 +1,7 @@
 # jsonapi serializer + deserializer
 
+[![Circle CI](https://circleci.com/gh/winterchord/jsonapi.svg?style=svg)](https://circleci.com/gh/winterchord/jsonapi)
+
 Library for serializing and deserializing java objects into
 [jsonapi][jsonapi] resources.
 
