@@ -4,8 +4,6 @@ machine:
 test:
   override:
     - mvn clean package jacoco:report coveralls:report
-  post:
-    - curl --form token=$COVERITY_TOKEN --form email=brian@rarevisions.net --form file=@target/jsonapi-1.0-SNAPSHOT.jar --form version="1.0-SNAPSHOT" --form description="CI Build" https://scan.coverity.com/builds?project=winterchord%2Fjsonapi
 general:
   artifacts:
     - "target/*.jar"
