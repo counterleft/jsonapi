@@ -1,6 +1,7 @@
 # jsonapi serializer + deserializer
 
 [![Circle CI](https://circleci.com/gh/winterchord/jsonapi.svg?style=svg)](https://circleci.com/gh/winterchord/jsonapi)
+[![Coverage Status](https://coveralls.io/repos/winterchord/jsonapi/badge.svg?branch=master&service=github)](https://coveralls.io/github/winterchord/jsonapi?branch=master)
 
 Library for serializing and deserializing java objects into
 [jsonapi][jsonapi] resources.
