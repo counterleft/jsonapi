@@ -4,6 +4,8 @@ machine:
 test:
   override:
     - mvn clean package jacoco:report coveralls:report
+  post:
+    - mvn com.coverity:ondemand-maven-plugin::check
 general:
   artifacts:
     - "target/*.jar"
