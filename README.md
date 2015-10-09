@@ -13,15 +13,90 @@ serialized into jsonapi resources.
 
 [jsonapi]: http://jsonapi.org
 
-## Development
-
-### Status
+## Project Status
 
 **Alpha**. This library is very experimental and its API is unstable.
 
 Do not use in production.
 
-### Tips
+## User Guide
+
+Read the [tests](https://github.com/winterchord/jsonapi/tree/master/src/test/java/org/winterchord/jsonapi) for more examples.
+
+### Resource POJOs
+
+A class annotated as a `@JsonApiResource` can be serialized to the jsonapi format.
+
+```java
+@JsonApiResource(name = "people")
+public class Person {
+  @JsonApiId
+  private Long id;
+  
+  private String name;
+  
+  public Long getId() {
+    return id;
+  }
+  
+  public void setId(Long id) {
+    this.id = id;
+  }
+  
+  public Stirng getName() {
+    return name;
+  }
+  
+  public void setName() {
+    this.name = name;
+  }
+}
+```
+
+Every resource class must be annotated with `@JsonApiResource` and `@JsonApiId`.
+All resource classes must adhere to the [JavaBean](https://en.wikipedia.org/wiki/JavaBeans#JavaBean_conventions) conventions.
+
+This `Person` class will serialize into:
+
+```javascript
+{
+  "jsonapi": {
+    "version": "1.0"
+  },
+  "data": {
+    "type": "people",
+    "id": "123",
+    "attributes": {
+      "name": "Sally",
+    }
+  }
+}
+```
+
+### Serialization
+
+To serialize a single resource:
+
+```java
+String json = new JsonApiSerializer().serialize(person);
+```
+
+To serialize a collection of resources:
+
+```java
+List<Person> people = ...;
+String json = new JsonApiSerializer().serialize(people);
+```
+
+### Deserialization
+
+To deserialize a single resource:
+
+```java
+Person person = new JsonApiSerializer().deserialize(json, Person.class);
+```
+
+## Development
 
 Run tests with:
 
