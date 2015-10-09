@@ -13,8 +13,26 @@ serialized into jsonapi resources.
 
 [jsonapi]: http://jsonapi.org
 
-## Development Status
+## Development
+
+### Status
 
 **Alpha**. This library is very experimental and its API is unstable.
 
 Do not use in production.
+
+### Tips
+
+Run tests with:
+
+```
+mvn verify
+```
+
+Run code coverage with:
+
+```
+mvn package jacoco:report
+```
+
+The coverage results are written to `target/site/jacoco/index.html`.
