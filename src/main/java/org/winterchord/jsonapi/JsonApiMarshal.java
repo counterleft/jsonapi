@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class JsonApiSerializer {
+public class JsonApiMarshal {
   private final ObjectMapper mapper = new ObjectMapper();
 
-  public JsonApiSerializer() {
+  public JsonApiMarshal() {
     SimpleModule module = new SimpleModule();
     module.addSerializer(JsonApiDocument.class, new JsonApiDocumentSerializer());
     module.addSerializer(JsonApiServer.class, new JsonApiServerSerializer());
@@ -31,11 +31,11 @@ public class JsonApiSerializer {
     mapper.registerModule(module);
   }
 
-  public String serialize(Object resource) {
-    return serialize(Collections.singletonList(resource));
+  public String dump(Object resource) {
+    return dump(Collections.singletonList(resource));
   }
 
-  public <R> String serialize(Iterable<R> resources) {
+  public <R> String dump(Iterable<R> resources) {
     JsonApiData data = null;
 
     if (resources != null) {
@@ -62,7 +62,7 @@ public class JsonApiSerializer {
     }
   }
 
-  public <R> R deserializeData(String jsonApiDocumentString, Class<R> resourceClass) throws
+  public <R> R load(String jsonApiDocumentString, Class<R> resourceClass) throws
       RequestBodyParseException {
     try {
       if (!isValidDeserializationInputs(jsonApiDocumentString, resourceClass)) {

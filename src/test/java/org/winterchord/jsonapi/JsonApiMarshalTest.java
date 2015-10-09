@@ -16,8 +16,8 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-public class JsonApiSerializerTest {
-  private JsonApiSerializer subject;
+public class JsonApiMarshalTest {
+  private JsonApiMarshal subject;
   private Person alice;
   private Person sally;
   private Person jane;
@@ -29,31 +29,31 @@ public class JsonApiSerializerTest {
     jane = new Person(789L, "Jane");
     jane.setAge(30);
 
-    subject = new JsonApiSerializer();
+    subject = new JsonApiMarshal();
   }
 
   @Test
-  public void testSerializeSingle() throws Exception {
+  public void testDumpSingle() throws Exception {
     JSONAssert.assertEquals(
         "{ jsonapi: { version: '1.0' }, "
         + "data: { type: 'people', id: '123', attributes: { name: 'Alice' } } }",
-        subject.serialize(alice), JSONCompareMode.NON_EXTENSIBLE);
+        subject.dump(alice), JSONCompareMode.NON_EXTENSIBLE);
 
     JSONAssert.assertEquals(
         "{ jsonapi: { version: '1.0' }, "
             + "data: { type: 'people', id: '789', attributes: { name: 'Jane', age: 30 } } }",
-        subject.serialize(jane), JSONCompareMode.NON_EXTENSIBLE);
+        subject.dump(jane), JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
-  public void testSerializeSingle_Null() throws Exception {
+  public void testDumpSingle_Null() throws Exception {
     JSONAssert.assertEquals(
         "{ jsonapi: { version: '1.0' }, data: null }",
-        subject.serialize(null), JSONCompareMode.NON_EXTENSIBLE);
+        subject.dump(null), JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
-  public void testSerializeMultiple() throws Exception {
+  public void testDumpMultiple() throws Exception {
     List<Person> resources = new ArrayList<>();
     resources.add(alice);
     resources.add(sally);
@@ -63,30 +63,30 @@ public class JsonApiSerializerTest {
         + "{ type: 'people', id: '123', attributes: { name: 'Alice' } },"
         + "{ type: 'people', id: '456', attributes: { name: 'Sally' } }"
         + "] }",
-        subject.serialize(resources), JSONCompareMode.NON_EXTENSIBLE);
+        subject.dump(resources), JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
-  public void testSerializeMultiple_EmptyList() throws Exception {
+  public void testDumpMultiple_EmptyList() throws Exception {
     List<Person> resources = new ArrayList<>();
 
     JSONAssert.assertEquals("{ jsonapi: { version: '1.0' }, data: [] }",
-        subject.serialize(resources), JSONCompareMode.NON_EXTENSIBLE);
+        subject.dump(resources), JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
-  public void testSerializeMultiple_NullEntry() throws Exception {
+  public void testDumpMultiple_NullEntry() throws Exception {
     List<Person> resources = new ArrayList<>();
     resources.add(null);
 
     JSONAssert.assertEquals("{ jsonapi: { version: '1.0' }, data: [] }",
-        subject.serialize(resources), JSONCompareMode.NON_EXTENSIBLE);
+        subject.dump(resources), JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
-  public void testSerialize_MissingIdAnnotation() throws Exception {
+  public void testDump_MissingIdAnnotation() throws Exception {
     try {
-      subject.serialize(new MissingIdResource("text"));
+      subject.dump(new MissingIdResource("text"));
       fail("unexpected");
     } catch (RuntimeException e) {
       assertThat(e.getMessage(), containsString("Missing @JsonApiId"));
@@ -94,14 +94,10 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingleSingleResource() throws Exception {
-    Person actual = subject.deserializeData(
-        "{ \"data\": { \"type\": \"people\", \"attributes\": {"
-            + "\"name\": \"Sally\","
-            + "\"age\": 12"
-            + "} } }",
-        Person.class
-    );
+  public void testLoadSingle() throws Exception {
+    Person actual = subject.load(
+        "{ \"data\": { \"type\": \"people\", \"attributes\": {" + "\"name\": \"Sally\","
+            + "\"age\": 12" + "} } }", Person.class);
 
     assertThat(actual.getName(), is("Sally"));
     assertThat(actual.getId(), nullValue());
@@ -109,14 +105,10 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingle_WithId() throws Exception {
-    Person actual = subject.deserializeData(
+  public void testLoadSingle_WithId() throws Exception {
+    Person actual = subject.load(
         "{ \"data\": { \"type\": \"people\", \"id\": \"987\", \"attributes\": {"
-            + "\"name\": \"Sally\","
-            + "\"age\": 12"
-            + "} } }",
-        Person.class
-    );
+            + "\"name\": \"Sally\"," + "\"age\": 12" + "} } }", Person.class);
 
     assertThat(actual.getName(), is("Sally"));
     assertThat(actual.getId(), is(987L));
@@ -124,17 +116,15 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingle_Null() throws Exception {
-    assertThat(subject.deserializeData(null, Person.class), nullValue());
+  public void testLoadSingle_Null() throws Exception {
+    assertThat(subject.load(null, Person.class), nullValue());
   }
 
   @Test
-  public void testDeserializeSingle_MissingTypeOnResource() throws Exception {
+  public void testLoadSingle_MissingTypeOnResource() throws Exception {
     try {
-      subject.deserializeData(
-          "{ \"data\": { \"type\": \"people\", \"id\": \"987\" } }",
-          MissingTypeResource.class
-      );
+      subject.load("{ \"data\": { \"type\": \"people\", \"id\": \"987\" } }",
+          MissingTypeResource.class);
 
       fail("unexpected");
     } catch (Exception e) {
@@ -143,14 +133,11 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingle_MissingTypeOnRequest() throws Exception {
+  public void testLoadSingle_MissingTypeOnRequest() throws Exception {
     try {
-      subject.deserializeData(
-          "{ \"data\": { \"id\": \"987\", \"attributes\": {"
-              + "\"name\": \"Sally\""
-              + "} } }",
-          Person.class
-      );
+      subject.load(
+          "{ \"data\": { \"id\": \"987\", \"attributes\": {" + "\"name\": \"Sally\"" + "} } }",
+          Person.class);
 
       fail("unexpected");
     } catch (RequestBodyParseException e) {
@@ -159,14 +146,10 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingle_NonTextualTypeOnRequest() throws Exception {
+  public void testLoadSingle_NonTextualTypeOnRequest() throws Exception {
     try {
-      subject.deserializeData(
-          "{ \"data\": { \"type\": 12345, \"id\": \"987\", \"attributes\": {"
-              + "\"name\": \"Sally\""
-              + "} } }",
-          Person.class
-      );
+      subject.load("{ \"data\": { \"type\": 12345, \"id\": \"987\", \"attributes\": {"
+          + "\"name\": \"Sally\"" + "} } }", Person.class);
 
       fail("unexpected");
     } catch (RequestBodyParseException e) {
@@ -174,12 +157,9 @@ public class JsonApiSerializerTest {
     }
 
     try {
-      subject.deserializeData(
-          "{ \"data\": { \"type\": null, \"id\": \"987\", \"attributes\": {"
-              + "\"name\": \"Sally\""
-              + "} } }",
-          Person.class
-      );
+      subject.load(
+          "{ \"data\": { \"type\": null, \"id\": \"987\", \"attributes\": {" + "\"name\": \"Sally\""
+              + "} } }", Person.class);
 
       fail("unexpected");
     } catch (RequestBodyParseException e) {
@@ -188,17 +168,14 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingle_NullData() throws Exception {
-    assertThat(subject.deserializeData("{ \"data\": null }", Person.class), nullValue());
+  public void testLoadSingle_NullData() throws Exception {
+    assertThat(subject.load("{ \"data\": null }", Person.class), nullValue());
   }
 
   @Test
-  public void testDeserializeSingle_EmptyData() throws Exception {
+  public void testLoadSingle_EmptyData() throws Exception {
     try {
-      subject.deserializeData(
-          "{ \"data\": {} }",
-          Person.class
-      );
+      subject.load("{ \"data\": {} }", Person.class);
 
       fail("unexpected");
     } catch (RequestBodyParseException e) {
@@ -207,11 +184,10 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingle_NullAttributes() throws Exception {
-    Person actual = subject.deserializeData(
+  public void testLoadSingle_NullAttributes() throws Exception {
+    Person actual = subject.load(
         "{ \"data\": { \"type\": \"people\", \"id\": \"987\", \"attributes\": null } } }",
-        Person.class
-    );
+        Person.class);
 
     assertThat(actual.getId(), is(987L));
     assertThat(actual.getName(), nullValue());
@@ -219,11 +195,10 @@ public class JsonApiSerializerTest {
   }
 
   @Test
-  public void testDeserializeSingle_EmptyAttributes() throws Exception {
-    Person actual = subject.deserializeData(
+  public void testLoadSingle_EmptyAttributes() throws Exception {
+    Person actual = subject.load(
         "{ \"data\": { \"type\": \"people\", \"id\": \"987\", \"attributes\": { } } }",
-        Person.class
-    );
+        Person.class);
 
     assertThat(actual.getId(), is(987L));
     assertThat(actual.getName(), nullValue());

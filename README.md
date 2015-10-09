@@ -78,14 +78,14 @@ This `Person` class will serialize into:
 To serialize a single resource:
 
 ```java
-String json = new JsonApiSerializer().serialize(person);
+String json = new JsonApiMarshal().dump(person);
 ```
 
 To serialize a collection of resources:
 
 ```java
 List<Person> people = ...;
-String json = new JsonApiSerializer().serialize(people);
+String json = new JsonApiMarshal().dump(people);
 ```
 
 ### Deserialization
@@ -93,7 +93,7 @@ String json = new JsonApiSerializer().serialize(people);
 To deserialize a single resource:
 
 ```java
-Person person = new JsonApiSerializer().deserializeData(json, Person.class);
+Person person = new JsonApiMarshal().load(json, Person.class);
 ```
 
 ## Development
