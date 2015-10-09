@@ -17,7 +17,7 @@ serialized into jsonapi resources.
 
 **Alpha**. This library is very experimental and its API is unstable.
 
-Do not use in production.
+Do _not_ use in production.
 
 ## User Guide
 
