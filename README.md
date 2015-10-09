@@ -43,7 +43,7 @@ public class Person {
     this.id = id;
   }
   
-  public Stirng getName() {
+  public String getName() {
     return name;
   }
   
