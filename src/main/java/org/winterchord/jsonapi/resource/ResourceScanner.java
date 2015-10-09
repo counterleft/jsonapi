@@ -10,7 +10,7 @@ import java.util.Map;
 public class ResourceScanner {
   public ResourceInformation scan(Object resource) {
     String id = null;
-    Map<String, String> attributeMapping = new HashMap<>();
+    Map<String, Object> attributeMapping = new HashMap<>();
 
     try {
       for (Field field : resource.getClass().getDeclaredFields()) {
@@ -23,7 +23,9 @@ public class ResourceScanner {
         if (field.isAnnotationPresent(JsonApiId.class)) {
           id = String.valueOf(field.get(resource));
         } else {
-          attributeMapping.put(field.getName(), String.valueOf(field.get(resource)));
+          if (field.get(resource) != null) {
+            attributeMapping.put(field.getName(), field.get(resource));
+          }
         }
 
         field.setAccessible(false);
