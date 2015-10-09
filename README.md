@@ -93,7 +93,7 @@ String json = new JsonApiSerializer().serialize(people);
 To deserialize a single resource:
 
 ```java
-Person person = new JsonApiSerializer().deserialize(json, Person.class);
+Person person = new JsonApiSerializer().deserializeData(json, Person.class);
 ```
 
 ## Development
