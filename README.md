@@ -21,6 +21,8 @@ Do _not_ use in production.
 
 ## User Guide
 
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [RFC 2119](http://tools.ietf.org/html/rfc2119).
+
 Read the [tests](https://github.com/winterchord/jsonapi/tree/master/src/test/java/org/winterchord/jsonapi) for more examples.
 
 ### Resource POJOs
@@ -53,8 +55,8 @@ public class Person {
 }
 ```
 
-Every resource class must be annotated with `@JsonApiResource` and `@JsonApiId`.
-All resource classes must adhere to the [JavaBean](https://en.wikipedia.org/wiki/JavaBeans#JavaBean_conventions) conventions.
+Every resource class MUST be annotated with `@JsonApiResource` and `@JsonApiId`.
+Every resource class MUST adhere to the [JavaBean](https://en.wikipedia.org/wiki/JavaBeans#JavaBean_conventions) conventions.
 
 This `Person` class will serialize into:
 
