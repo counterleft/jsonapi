@@ -83,6 +83,23 @@ To serialize a single resource:
 String json = new JsonApiMarshal().dump(person);
 ```
 
+The value for `json` will be:
+
+```javascript
+{
+  "jsonapi": {
+    "version": "1.0"
+  },
+  "data": {
+    "type": "people",
+    "id": "123",
+    "attributes": {
+      "name": "Sally",
+    }
+  }
+}
+```
+
 To serialize a collection of resources:
 
 ```java
@@ -90,12 +107,49 @@ List<Person> people = ...;
 String json = new JsonApiMarshal().dump(people);
 ```
 
+The value for `json` will be:
+
+```javascript
+{
+  "jsonapi": {
+    "version": "1.0"
+  },
+  "data": [{
+    "type": "people",
+    "id": "123",
+    "attributes": {
+      "name": "Sally",
+    }
+  }, {
+    "type": "people",
+    "id": "456",
+    "attributes": {
+      "name": "Alice",
+    }
+  }]
+}
+```
+
 ### Deserialization
 
-To deserialize a single resource:
+To deserialize a single resource from json:
 
 ```java
 Person person = new JsonApiMarshal().load(json, Person.class);
+```
+
+The value of `json` is:
+
+```javascript
+{
+  "data": {
+    "type": "people",
+    "id": "123",
+    "attributes": {
+      "name": "Sally",
+    }
+  }
+}
 ```
 
 ## Development
