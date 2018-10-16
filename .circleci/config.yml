@@ -5,13 +5,13 @@ jobs:
       - image: circleci/openjdk:11-jdk-browsers-legacy
     steps:
       - checkout
-      - run: mvn install
+      - run: mvn install -q
   test:
     docker:
       - image: circleci/openjdk:11-jdk-browsers-legacy
     steps:
       - checkout
-      - run: mvn verify
+      - run: mvn verify -q
       - store_test_results:
           path: target/surefire-reports/*.xml
 workflows:
