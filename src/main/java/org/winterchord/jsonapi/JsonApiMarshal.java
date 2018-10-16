@@ -81,7 +81,7 @@ public class JsonApiMarshal {
         return null;
       }
 
-      R resourceInstance = resourceClass.newInstance();
+      R resourceInstance = resourceClass.getDeclaredConstructor().newInstance();
 
       if (documentRequest.dataBody.id != null) {
         BeanUtils.setProperty(resourceInstance, "id", documentRequest.dataBody.id);

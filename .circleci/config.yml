@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:11-jdk-browsers-legacy
+    steps:
+      - checkout
+      - run: mvn install
+  test:
+    docker:
+      - image: circleci/openjdk:11-jdk-browsers-legacy
+    steps:
+      - checkout
+      - run: mvn verify
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test
