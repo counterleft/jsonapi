@@ -25,7 +25,7 @@ public class JsonApiMarshalTest {
   private Person jane;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     alice = new Person(123L, "Alice");
     sally = new Person(456L, "Sally");
     jane = new Person(789L, "Jane");
@@ -86,7 +86,7 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testDump_MissingIdAnnotation() throws Exception {
+  public void testDump_MissingIdAnnotation() {
     try {
       subject.dump(new MissingIdResource("text"));
       fail("unexpected");
@@ -96,7 +96,7 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle() throws Exception {
+  public void testLoadSingle() {
     Person actual = subject.load(
         "{ \"data\": { \"type\": \"people\", \"attributes\": {" + "\"name\": \"Sally\","
             + "\"age\": 12" + "} } }", Person.class);
@@ -107,7 +107,7 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle_WithId() throws Exception {
+  public void testLoadSingle_WithId() {
     Person actual = subject.load(
         "{ \"data\": { \"type\": \"people\", \"id\": \"987\", \"attributes\": {"
             + "\"name\": \"Sally\"," + "\"age\": 12" + "} } }", Person.class);
@@ -118,12 +118,12 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle_Null() throws Exception {
+  public void testLoadSingle_Null() {
     assertThat(subject.load(null, Person.class), nullValue());
   }
 
   @Test
-  public void testLoadSingle_MissingTypeOnResource() throws Exception {
+  public void testLoadSingle_MissingTypeOnResource() {
     try {
       subject.load("{ \"data\": { \"type\": \"people\", \"id\": \"987\" } }",
           MissingTypeResource.class);
@@ -135,7 +135,7 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle_MissingTypeOnRequest() throws Exception {
+  public void testLoadSingle_MissingTypeOnRequest() {
     try {
       subject.load(
           "{ \"data\": { \"id\": \"987\", \"attributes\": {" + "\"name\": \"Sally\"" + "} } }",
@@ -148,7 +148,7 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle_NonTextualTypeOnRequest() throws Exception {
+  public void testLoadSingle_NonTextualTypeOnRequest() {
     try {
       subject.load("{ \"data\": { \"type\": 12345, \"id\": \"987\", \"attributes\": {"
           + "\"name\": \"Sally\"" + "} } }", Person.class);
@@ -170,12 +170,12 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle_NullData() throws Exception {
+  public void testLoadSingle_NullData() {
     assertThat(subject.load("{ \"data\": null }", Person.class), nullValue());
   }
 
   @Test
-  public void testLoadSingle_EmptyData() throws Exception {
+  public void testLoadSingle_EmptyData() {
     try {
       subject.load("{ \"data\": {} }", Person.class);
 
@@ -186,7 +186,7 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle_NullAttributes() throws Exception {
+  public void testLoadSingle_NullAttributes() {
     Person actual = subject.load(
         "{ \"data\": { \"type\": \"people\", \"id\": \"987\", \"attributes\": null } } }",
         Person.class);
@@ -197,7 +197,7 @@ public class JsonApiMarshalTest {
   }
 
   @Test
-  public void testLoadSingle_EmptyAttributes() throws Exception {
+  public void testLoadSingle_EmptyAttributes() {
     Person actual = subject.load(
         "{ \"data\": { \"type\": \"people\", \"id\": \"987\", \"attributes\": { } } }",
         Person.class);
