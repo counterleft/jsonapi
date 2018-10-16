@@ -12,6 +12,8 @@ jobs:
     steps:
       - checkout
       - run: mvn verify
+      - store_test_results:
+          path: target/surefire-reports/*.xml
 workflows:
   version: 2
   build_and_test:
